@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div style="display: flex; justify-content: space-between; margin: 40px">
+      <div>
+        <input type="text" placeholder="search-actress" id="search" />
+        <button id="btn">search</button>
+      </div>
+      <div>
+        <input type="text" id="vid-play" placeholder="Enter-viedeo-id" />
+        <button id="view_key">search</button>
+      </div>
+    </div>
+    <div id="main" style="display: flex; flex-wrap: wrap; gap: 20px;justify-content: center;"></div>
+    <script>
+      const div = document.getElementById("main");
+      const btn = document.getElementById("btn");
+      let inp = document.getElementById("search");
+      const btn2 = document.getElementById("view_key");
+      let inp2 = document.getElementById("vid-play");
+
+      let str = "";
+      btn.addEventListener("click", async () => {
+        const url = `https://pornhub2.p.rapidapi.com/v1/search-videos?query=${inp.value}&page=1`;
+        const options = {
+          method: "GET",
+          headers: {
+            "x-rapidapi-key":
+              "fa856c0684mshabba83df2f38433p1aee1cjsnac39638af833",
+            "x-rapidapi-host": "pornhub2.p.rapidapi.com",
+          },
+        };
+
+        try {
+          const response = await fetch(url, options);
+          const result = await response.json();
+          let arr = result.videos;
+          str=''
+          for (let i = 0; i < arr.length; i++) {
+            str += `<div>
+            <img height="150" width="300"  style="border-color: 2px solid black;" src="${arr[i].thumbnail}" alt="">
+            <h3>ID : ${arr[i].view_key}</h3>
+        </div>`;
+          }
+          div.innerHTML = str;
+        } catch (error) {
+          console.error(error);
+        }
+      });
+      btn2.addEventListener("click", async function () {
+        const url = `https://pornhub2.p.rapidapi.com/v1/video-details?view_key=${inp2.value}`;
+        const options = {
+          method: "GET",
+          headers: {
+            "x-rapidapi-key":
+              "fa856c0684mshabba83df2f38433p1aee1cjsnac39638af833",
+            "x-rapidapi-host": "pornhub2.p.rapidapi.com",
+          },
+        };
+
+        try {
+          const response = await fetch(url, options);
+          const result = await response.json();
+          str = `<div style="position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);">${result.video.embed_code}</div>`;
+          div.innerHTML = str;
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html>
